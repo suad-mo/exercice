@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -12,13 +14,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.white,
       ),
-      home: NewsScreen(),
+      home: const NewsScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class NewsScreen extends StatefulWidget {
+  const NewsScreen({super.key});
+
   @override
   State<StatefulWidget> createState() => _NewsScreenState();
 }
@@ -48,7 +52,7 @@ class _NewsScreenState extends State<NewsScreen> {
                     top: true,
                     bottom: Platform.isIOS ? false : true,
                     sliver: SliverAppBar(
-                      title: Text('Tab Demo'),
+                      title: const Text('Tab Demo'),
                       floating: true,
                       pinned: false,
                       snap: true,
@@ -111,7 +115,7 @@ class _NewsScreenState extends State<NewsScreen> {
                                             ],
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 8,
                                         )
                                       ],
