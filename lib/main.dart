@@ -1,311 +1,210 @@
-import 'dart:ui';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:baseflow_plugin_template/baseflow_plugin_template.dart';
+import 'package:flutter_blurhash/flutter_blurhash.dart';
 
 void main() {
-  runApp(GetMaterialApp(
-    // It is not mandatory to use named routes, but dynamic urls are interesting.
-    initialRoute: '/home',
-    defaultTransition: Transition.native,
-    translations: MyTranslations(),
-    locale: Locale('pt', 'BR'),
-    getPages: [
-      //Simple GetPage
-      GetPage(name: '/home', page: () => First()),
-      // GetPage with custom transitions and bindings
-      GetPage(
-        name: '/second',
-        page: () => Second(),
-        customTransition: SizeTransitions(),
-        binding: SampleBind(),
-      ),
-      // GetPage with default transitions
-      GetPage(
-        name: '/third',
-        transition: Transition.cupertino,
-        page: () => Third(),
-      ),
+  CachedNetworkImage.logLevel = CacheManagerLogLevel.debug;
+
+  runApp(BaseflowPluginExample(
+    pluginName: 'CachedNetworkImage',
+    githubURL: 'https://github.com/Baseflow/flutter_cache_manager',
+    pubDevURL: 'https://pub.dev/packages/flutter_cache_manager',
+    pages: [
+      BasicContent.createPage(),
+      ListContent.createPage(),
+      GridContent.createPage(),
     ],
   ));
 }
 
-class MyTranslations extends Translations {
-  @override
-  Map<String, Map<String, String>> get keys => {
-        'en': {
-          'title': 'Hello World %s',
-        },
-        'en_US': {
-          'title': 'Hello World from US',
-        },
-        'pt': {
-          'title': 'Olá de Portugal',
-        },
-        'pt_BR': {
-          'title': 'Olá do Brasil',
-        },
-      };
-}
+/// Demonstrates a [StatelessWidget] containing [CachedNetworkImage]
+class BasicContent extends StatelessWidget {
+  const BasicContent({Key? key}) : super(key: key);
 
-class Controller extends GetxController {
-  int count = 0;
-  void increment() {
-    count++;
-    // use update method to update all count variables
-    update();
+  static ExamplePage createPage() {
+    return ExamplePage(Icons.image, (context) => const BasicContent());
   }
-}
 
-class First extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () {
-            Get.snackbar("Hi", "I'm modern snackbar");
-          },
-        ),
-        title: Text("title".trArgs(['John'])),
-      ),
-      body: Center(
+    return SingleChildScrollView(
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GetBuilder<Controller>(
-                init: Controller(),
-                // You can initialize your controller here the first time. Don't use init in your other GetBuilders of same controller
-                builder: (_) => Text(
-                      'clicks: ${_.count}',
-                    )),
-            ElevatedButton(
-              child: Text('Next Route'),
-              onPressed: () {
-                Get.toNamed('/second');
-              },
+          children: <Widget>[
+            _blurHashImage(),
+            _sizedContainer(
+              const Image(
+                image: CachedNetworkImageProvider(
+                  'https://via.placeholder.com/350x150',
+                ),
+              ),
             ),
-            ElevatedButton(
-              child: Text('Change locale to English'),
-              onPressed: () {
-                Get.updateLocale(Locale('en', 'UK'));
-              },
+            _sizedContainer(
+              CachedNetworkImage(
+                progressIndicatorBuilder: (context, url, progress) => Center(
+                  child: CircularProgressIndicator(
+                    value: progress.progress,
+                  ),
+                ),
+                imageUrl:
+                    'https://images.unsplash.com/photo-1532264523420-881a47db012d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9',
+              ),
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
-            Get.find<Controller>().increment();
-          }),
-    );
-  }
-}
-
-class Second extends GetView<ControllerX> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('second Route'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Obx(
-              () {
-                print("count1 rebuild");
-                return Text('${controller.count1}');
-              },
+            _sizedContainer(
+              CachedNetworkImage(
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                imageUrl: 'https://via.placeholder.com/200x150',
+              ),
             ),
-            Obx(
-              () {
-                print("count2 rebuild");
-                return Text('${controller.count2}');
-              },
+            _sizedContainer(
+              CachedNetworkImage(
+                imageUrl: 'https://via.placeholder.com/300x150',
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                      colorFilter: const ColorFilter.mode(
+                        Colors.red,
+                        BlendMode.colorBurn,
+                      ),
+                    ),
+                  ),
+                ),
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
             ),
-            Obx(() {
-              print("sum rebuild");
-              return Text('${controller.sum}');
-            }),
-            Obx(
-              () => Text('Name: ${controller.user.value.name}'),
+            CachedNetworkImage(
+              imageUrl: 'https://via.placeholder.com/300x300',
+              placeholder: (context, url) => const CircleAvatar(
+                backgroundColor: Colors.amber,
+                radius: 150,
+              ),
+              imageBuilder: (context, image) => CircleAvatar(
+                backgroundImage: image,
+                radius: 150,
+              ),
             ),
-            Obx(
-              () => Text('Age: ${controller.user.value.age}'),
+            _sizedContainer(
+              CachedNetworkImage(
+                imageUrl: 'https://notAvalid.uri',
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
             ),
-            ElevatedButton(
-              child: const Text("Go to last page"),
-              onPressed: () {
-                Get.toNamed('/third', arguments: 'arguments of second');
-              },
+            _sizedContainer(
+              CachedNetworkImage(
+                imageUrl: 'not a uri at all',
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+              ),
             ),
-            ElevatedButton(
-              child: const Text("Back page and open snackbar"),
-              onPressed: () {
-                Get.back();
-                Get.snackbar(
-                  'User 123',
-                  'Successfully created',
-                );
-              },
-            ),
-            ElevatedButton(
-              child: Text("Increment"),
-              onPressed: () {
-                controller.increment();
-              },
-            ),
-            ElevatedButton(
-              child: Text("Increment"),
-              onPressed: () {
-                controller.increment2();
-              },
-            ),
-            ElevatedButton(
-              child: Text("Update name"),
-              onPressed: () {
-                controller.updateUser();
-              },
-            ),
-            ElevatedButton(
-              child: Text("Dispose worker"),
-              onPressed: () {
-                controller.disposeWorker();
-              },
+            _sizedContainer(
+              CachedNetworkImage(
+                maxHeightDiskCache: 10,
+                imageUrl: 'https://via.placeholder.com/350x200',
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                fadeOutDuration: const Duration(seconds: 1),
+                fadeInDuration: const Duration(seconds: 3),
+              ),
             ),
           ],
         ),
       ),
     );
   }
+
+  Widget _blurHashImage() {
+    return SizedBox(
+      width: double.infinity,
+      child: CachedNetworkImage(
+        placeholder: (context, url) => const AspectRatio(
+          aspectRatio: 1.6,
+          child: BlurHash(hash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj'),
+        ),
+        imageUrl: 'https://blurha.sh/assets/images/img1.jpg',
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  Widget _sizedContainer(Widget child) {
+    return SizedBox(
+      width: double.infinity, // 300.0,
+      height: 150.0,
+      child: Center(child: child),
+    );
+  }
 }
 
-class Third extends GetView<ControllerX> {
+/// Demonstrates a [ListView] containing [CachedNetworkImage]
+class ListContent extends StatelessWidget {
+  const ListContent({Key? key}) : super(key: key);
+
+  static ExamplePage createPage() {
+    return ExamplePage(Icons.list, (context) => const ListContent());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        controller.incrementList();
-      }),
-      appBar: AppBar(
-        title: Text("Third ${Get.arguments}"),
-      ),
-      body: Center(
-          child: Obx(() => ListView.builder(
-              itemCount: controller.list.length,
-              itemBuilder: (context, index) {
-                return Text("${controller.list[index]}");
-              }))),
-    );
-  }
-}
-
-class SampleBind extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut<ControllerX>(() => ControllerX());
-  }
-}
-
-class User {
-  User({this.name = 'Name', this.age = 0});
-  String name;
-  int age;
-}
-
-class Item {
-  Item({
-    required this.id,
-    required this.title,
-  });
-  final int id;
-  final String title;
-}
-
-class CtrlListItems<String> extends GetxController {
-  CtrlListItems(this.item);
-
-  final Item item;
-}
-
-class ControllerX extends GetxController {
-  final count1 = 0.obs;
-  final count2 = 0.obs;
-  final list = [56].obs;
-  final user = User().obs;
-
-  updateUser() {
-    user.update((value) {
-      value!.name = 'Jose';
-      value.age = 30;
-    });
-  }
-
-  /// Once the controller has entered memory, onInit will be called.
-  /// It is preferable to use onInit instead of class constructors or initState method.
-  /// Use onInit to trigger initial events like API searches, listeners registration
-  /// or Workers registration.
-  /// Workers are event handlers, they do not modify the final result,
-  /// but it allows you to listen to an event and trigger customized actions.
-  /// Here is an outline of how you can use them:
-
-  /// made this if you need cancel you worker
-  late Worker _ever;
-
-  @override
-  onInit() {
-    /// Called every time the variable $_ is changed
-    _ever = ever(count1, (_) => print("$_ has been changed (ever)"));
-
-    everAll([count1, count2], (_) => print("$_ has been changed (everAll)"));
-
-    /// Called first time the variable $_ is changed
-    once(count1, (_) => print("$_ was changed once (once)"));
-
-    /// Anti DDos - Called every time the user stops typing for 1 second, for example.
-    debounce(count1, (_) => print("debouce$_ (debounce)"),
-        time: Duration(seconds: 1));
-
-    /// Ignore all changes within 1 second.
-    interval(count1, (_) => print("interval $_ (interval)"),
-        time: Duration(seconds: 1));
-  }
-
-  int get sum => count1.value + count2.value;
-
-  increment() => count1.value++;
-
-  increment2() => count2.value++;
-
-  disposeWorker() {
-    _ever.dispose();
-    // or _ever();
-  }
-
-  incrementList() => list.add(75);
-}
-
-class SizeTransitions extends CustomTransition {
-  @override
-  Widget buildTransition(
-      BuildContext context,
-      Curve? curve,
-      Alignment? alignment,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
-    return Align(
-      alignment: Alignment.center,
-      child: SizeTransition(
-        sizeFactor: CurvedAnimation(
-          parent: animation,
-          curve: curve!,
+    return ListView.builder(
+      itemBuilder: (BuildContext context, int index) => Card(
+        child: Column(
+          children: <Widget>[
+            CachedNetworkImage(
+              imageUrl: 'https://loremflickr.com/320/240/music?lock=$index',
+              placeholder: (BuildContext context, String url) => Container(
+                width: 320,
+                height: 240,
+                color: Colors.purple,
+              ),
+            ),
+          ],
         ),
-        child: child,
+      ),
+      itemCount: 250,
+    );
+  }
+}
+
+/// Demonstrates a [GridView] containing [CachedNetworkImage]
+class GridContent extends StatelessWidget {
+  const GridContent({Key? key}) : super(key: key);
+
+  static ExamplePage createPage() {
+    return ExamplePage(Icons.grid_on, (context) => const GridContent());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      itemCount: 250,
+      gridDelegate:
+          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+      itemBuilder: (BuildContext context, int index) => CachedNetworkImage(
+        imageUrl: 'https://loremflickr.com/100/100/music?lock=$index',
+        placeholder: _loader,
+        errorWidget: _error,
       ),
     );
+  }
+
+  Widget _loader(BuildContext context, String url) {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _error(BuildContext context, String url, dynamic error) {
+    return const Center(child: Icon(Icons.error));
   }
 }
