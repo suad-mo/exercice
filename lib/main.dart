@@ -1,311 +1,134 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-void main() {
-  runApp(GetMaterialApp(
-    // It is not mandatory to use named routes, but dynamic urls are interesting.
-    initialRoute: '/home',
-    defaultTransition: Transition.native,
-    translations: MyTranslations(),
-    locale: Locale('pt', 'BR'),
-    getPages: [
-      //Simple GetPage
-      GetPage(name: '/home', page: () => First()),
-      // GetPage with custom transitions and bindings
-      GetPage(
-        name: '/second',
-        page: () => Second(),
-        customTransition: SizeTransitions(),
-        binding: SampleBind(),
-      ),
-      // GetPage with default transitions
-      GetPage(
-        name: '/third',
-        transition: Transition.cupertino,
-        page: () => Third(),
-      ),
-    ],
-  ));
-}
+void main() => runApp(const MyApp());
 
-class MyTranslations extends Translations {
-  @override
-  Map<String, Map<String, String>> get keys => {
-        'en': {
-          'title': 'Hello World %s',
-        },
-        'en_US': {
-          'title': 'Hello World from US',
-        },
-        'pt': {
-          'title': 'Olá de Portugal',
-        },
-        'pt_BR': {
-          'title': 'Olá do Brasil',
-        },
-      };
-}
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-class Controller extends GetxController {
-  int count = 0;
-  void increment() {
-    count++;
-    // use update method to update all count variables
-    update();
-  }
-}
-
-class First extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.add),
-          onPressed: () {
-            Get.snackbar("Hi", "I'm modern snackbar");
-          },
-        ),
-        title: Text("title".trArgs(['John'])),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GetBuilder<Controller>(
-                init: Controller(),
-                // You can initialize your controller here the first time. Don't use init in your other GetBuilders of same controller
-                builder: (_) => Text(
-                      'clicks: ${_.count}',
-                    )),
-            ElevatedButton(
-              child: Text('Next Route'),
-              onPressed: () {
-                Get.toNamed('/second');
-              },
+    const title = 'GeeksforGeeks';
+
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+            body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              snap: false,
+              pinned: true,
+              floating: false,
+              flexibleSpace: FlexibleSpaceBar(
+                  // centerTitle: true,
+                  // // titlePadding: EdgeInsets.only(bottom: 0),
+                  // title: const Text(title,
+                  //     style: TextStyle(
+                  //       color: Colors.white,
+                  //       fontSize: 16.0,
+                  //     ) //TextStyle
+                  //     ), //Text
+                  background: Stack(
+                fit: StackFit.loose,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    child: Image.network(
+                      "https://i.ibb.co/QpWGK5j/Geeksfor-Geeks.png",
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                  Positioned(
+                    top: 20,
+                    right: 20,
+                    child: Row(
+                      children: [
+                        Container(
+                          // margin: EdgeInsets.all(5),
+                          // decoration: BoxDecoration(
+                          //     border: Border.all(width: 2),
+                          //     color: Colors.green),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            border: Border.all(color: Colors.red),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          // color: Colors.redAccent,
+                          child: Text(1.10.toStringAsFixed(1)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 20,
+                    left: 20,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: Colors.red),
+                        color: Colors.black26,
+                      ),
+                      // backgroundBlendMode: BlendMode.color),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      // color: Colors.redAccent,
+                      child: Text(1.10.toStringAsFixed(1)),
+                    ),
+                  ),
+                ],
+              ) //Images.network
+                  ), //FlexibleSpaceBar
+              expandedHeight: 280,
+              backgroundColor: Colors.greenAccent[400],
+              leading: IconButton(
+                icon: const Icon(Icons.menu),
+                tooltip: 'Menu',
+                onPressed: () {},
+              ),
+              bottom: const TabBar(
+                // padding: EdgeInsets.only(bottom: 30),
+                tabs: <Widget>[
+                  Tab(icon: Icon(Icons.cloud_outlined)),
+                  Tab(icon: Icon(Icons.beach_access_sharp)),
+                  Tab(icon: Icon(Icons.brightness_5_sharp)),
+                ],
+              ),
+              actions: <Widget>[
+                IconButton(
+                  icon: const Icon(Icons.comment),
+                  tooltip: 'Comment Icon',
+                  onPressed: () {},
+                ), //IconButton
+                IconButton(
+                  icon: const Icon(Icons.settings),
+                  tooltip: 'Setting Icon',
+                  onPressed: () {},
+                ), //IconButton
+              ], //<Widget>[]
+            ), //SliverAppBar
+
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => ListTile(
+                  tileColor: (index % 2 == 0) ? Colors.white : Colors.green[50],
+                  title: Center(
+                    child: Text('$index',
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            fontSize: 50,
+                            color: Colors.greenAccent[400]) //TextStyle
+                        ), //Text
+                  ), //Center
+                ), //ListTile
+                childCount: 51,
+              ), //SliverChildBuildDelegate
+            ) //SliverList
+          ], //<Widget>[]
+        ) //CustonScrollView
             ),
-            ElevatedButton(
-              child: Text('Change locale to English'),
-              onPressed: () {
-                Get.updateLocale(Locale('en', 'UK'));
-              },
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {
-            Get.find<Controller>().increment();
-          }),
-    );
-  }
-}
-
-class Second extends GetView<ControllerX> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('second Route'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Obx(
-              () {
-                print("count1 rebuild");
-                return Text('${controller.count1}');
-              },
-            ),
-            Obx(
-              () {
-                print("count2 rebuild");
-                return Text('${controller.count2}');
-              },
-            ),
-            Obx(() {
-              print("sum rebuild");
-              return Text('${controller.sum}');
-            }),
-            Obx(
-              () => Text('Name: ${controller.user.value.name}'),
-            ),
-            Obx(
-              () => Text('Age: ${controller.user.value.age}'),
-            ),
-            ElevatedButton(
-              child: const Text("Go to last page"),
-              onPressed: () {
-                Get.toNamed('/third', arguments: 'arguments of second');
-              },
-            ),
-            ElevatedButton(
-              child: const Text("Back page and open snackbar"),
-              onPressed: () {
-                Get.back();
-                Get.snackbar(
-                  'User 123',
-                  'Successfully created',
-                );
-              },
-            ),
-            ElevatedButton(
-              child: Text("Increment"),
-              onPressed: () {
-                controller.increment();
-              },
-            ),
-            ElevatedButton(
-              child: Text("Increment"),
-              onPressed: () {
-                controller.increment2();
-              },
-            ),
-            ElevatedButton(
-              child: Text("Update name"),
-              onPressed: () {
-                controller.updateUser();
-              },
-            ),
-            ElevatedButton(
-              child: Text("Dispose worker"),
-              onPressed: () {
-                controller.disposeWorker();
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Third extends GetView<ControllerX> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(onPressed: () {
-        controller.incrementList();
-      }),
-      appBar: AppBar(
-        title: Text("Third ${Get.arguments}"),
-      ),
-      body: Center(
-          child: Obx(() => ListView.builder(
-              itemCount: controller.list.length,
-              itemBuilder: (context, index) {
-                return Text("${controller.list[index]}");
-              }))),
-    );
-  }
-}
-
-class SampleBind extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut<ControllerX>(() => ControllerX());
-  }
-}
-
-class User {
-  User({this.name = 'Name', this.age = 0});
-  String name;
-  int age;
-}
-
-class Item {
-  Item({
-    required this.id,
-    required this.title,
-  });
-  final int id;
-  final String title;
-}
-
-class CtrlListItems<String> extends GetxController {
-  CtrlListItems(this.item);
-
-  final Item item;
-}
-
-class ControllerX extends GetxController {
-  final count1 = 0.obs;
-  final count2 = 0.obs;
-  final list = [56].obs;
-  final user = User().obs;
-
-  updateUser() {
-    user.update((value) {
-      value!.name = 'Jose';
-      value.age = 30;
-    });
-  }
-
-  /// Once the controller has entered memory, onInit will be called.
-  /// It is preferable to use onInit instead of class constructors or initState method.
-  /// Use onInit to trigger initial events like API searches, listeners registration
-  /// or Workers registration.
-  /// Workers are event handlers, they do not modify the final result,
-  /// but it allows you to listen to an event and trigger customized actions.
-  /// Here is an outline of how you can use them:
-
-  /// made this if you need cancel you worker
-  late Worker _ever;
-
-  @override
-  onInit() {
-    /// Called every time the variable $_ is changed
-    _ever = ever(count1, (_) => print("$_ has been changed (ever)"));
-
-    everAll([count1, count2], (_) => print("$_ has been changed (everAll)"));
-
-    /// Called first time the variable $_ is changed
-    once(count1, (_) => print("$_ was changed once (once)"));
-
-    /// Anti DDos - Called every time the user stops typing for 1 second, for example.
-    debounce(count1, (_) => print("debouce$_ (debounce)"),
-        time: Duration(seconds: 1));
-
-    /// Ignore all changes within 1 second.
-    interval(count1, (_) => print("interval $_ (interval)"),
-        time: Duration(seconds: 1));
-  }
-
-  int get sum => count1.value + count2.value;
-
-  increment() => count1.value++;
-
-  increment2() => count2.value++;
-
-  disposeWorker() {
-    _ever.dispose();
-    // or _ever();
-  }
-
-  incrementList() => list.add(75);
-}
-
-class SizeTransitions extends CustomTransition {
-  @override
-  Widget buildTransition(
-      BuildContext context,
-      Curve? curve,
-      Alignment? alignment,
-      Animation<double> animation,
-      Animation<double> secondaryAnimation,
-      Widget child) {
-    return Align(
-      alignment: Alignment.center,
-      child: SizeTransition(
-        sizeFactor: CurvedAnimation(
-          parent: animation,
-          curve: curve!,
-        ),
-        child: child,
-      ),
-    );
+      ), //Scaffold
+      debugShowCheckedModeBanner: false,
+      // Remove debug banner for proper
+      // view of setting icon
+    ); //MaterialApp
   }
 }
