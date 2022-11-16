@@ -17,8 +17,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(primaryColor: Colors.black),
-        // appBarTheme: const AppBarTheme(backgroundColor: Colors.black)),
+        theme: ThemeData(
+          primaryColor: Colors.white,
+          appBarTheme: const AppBarTheme(
+              backgroundColor: Colors.white, foregroundColor: Colors.black),
+          tabBarTheme: const TabBarTheme(labelColor: Colors.amber),
+          // bottomNavigationBarTheme: BottomNavigationBarTheme()
+        ),
         title: title,
         home: const MainPage(),
       );
@@ -43,9 +48,9 @@ class _MainPageState extends State<MainPage> {
   Widget buildBottomBar() {
     const style = TextStyle(color: Colors.white);
     return BottomNavigationBar(
-      backgroundColor: Theme.of(context).primaryColor,
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.white70,
+      backgroundColor: Theme.of(context).primaryColorDark,
+      selectedItemColor: Colors.white70,
+      unselectedItemColor: Colors.white24,
       currentIndex: index,
       items: const [
         BottomNavigationBarItem(

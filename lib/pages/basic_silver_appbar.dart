@@ -21,7 +21,7 @@ class BasicSilverAppBar extends StatelessWidget {
                 ),
                 collapseMode: CollapseMode.parallax, // default mode
                 title: const Text('Flexibile Title'),
-                centerTitle: true,
+                centerTitle: false,
               ),
               // title: const Text('Flexibile Title'),
               // centerTitle: true,

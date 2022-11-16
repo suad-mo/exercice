@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -8,32 +10,36 @@ class AdvancedSilverAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: CustomScrollView(
-          slivers: [
-            SliverPersistentHeader(
-              delegate: CustomSilverAppBarrDelegate(expandedHeight: 200),
-              pinned: true,
-            ),
-            buildImages(),
-          ],
+        body: DefaultTabController(
+          length: 2,
+          child: CustomScrollView(
+            slivers: [
+              SliverPersistentHeader(
+                delegate: CustomSilverAppBarDelegate(expandedHeight: 250),
+                pinned: true,
+                floating: false,
+              ),
+              buildImages(),
+            ],
+          ),
         ),
       );
 
   Widget buildImages() => SliverGrid(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-        ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) => ImageWidget(index: index),
-          childCount: 20,
-        ),
-      );
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        // childAspectRatio: 1.2,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => ImageWidget(index: index),
+        childCount: 20,
+      ));
 }
 
-class CustomSilverAppBarrDelegate extends SliverPersistentHeaderDelegate {
+class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
 
-  CustomSilverAppBarrDelegate({
+  CustomSilverAppBarDelegate({
     required this.expandedHeight,
   });
 
@@ -42,19 +48,26 @@ class CustomSilverAppBarrDelegate extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     const size = 60;
     final top = expandedHeight - shrinkOffset - size / 2;
-
+    print(
+        'shrinkOffset:$shrinkOffset, overlapsContent:$overlapsContent, expandedHeight:$expandedHeight');
     return Stack(
-      fit: StackFit.expand,
       clipBehavior: Clip.none,
+      fit: StackFit.expand,
       children: [
-        buildBackground(shrinkOffset),
-        buildAppBar(shrinkOffset),
-        Positioned(
-          top: top,
-          left: 20,
-          right: 20,
-          child: buildFloating(shrinkOffset),
-        ),
+        if (isBack(shrinkOffset)) buildBackground01(shrinkOffset),
+        if (!isBack(shrinkOffset))
+          Container(
+            color: Colors.white10,
+            clipBehavior: Clip.none,
+          ),
+
+        buildAppBar01(shrinkOffset),
+        // Positioned(
+        //   top: top,
+        //   left: 20,
+        //   right: 20,
+        //   child: buildFloating(shrinkOffset),
+        // ),
       ],
     );
   }
@@ -63,18 +76,72 @@ class CustomSilverAppBarrDelegate extends SliverPersistentHeaderDelegate {
 
   double disappear(double shrinkOffset) => 1 - shrinkOffset / expandedHeight;
 
+  bool isBar(double shrinkOffset) => shrinkOffset <= expandedHeight - 160;
+  bool isBack(double shrinkOffset) => shrinkOffset <= expandedHeight - 180;
+
   Widget buildAppBar(double shrinkOffset) => Opacity(
         opacity: appear(shrinkOffset),
         child: AppBar(
-          toolbarHeight: 30,
-          automaticallyImplyLeading: false,
+          leading: const Icon(Icons.arrow_back),
           title: const Text(MyApp.title),
-          centerTitle: true,
+          // centerTitle: true,
+          // flexibleSpace: buildBackground(shrinkOffset),
         ),
+      );
+
+  Widget buildAppBar01(double shrinkOffset) => AppBar(
+        backgroundColor:
+            isBar(shrinkOffset) ? Colors.transparent : Colors.white,
+        leading: isBar(shrinkOffset)
+            ? Container(
+                // color: Colors.green,
+                margin: const EdgeInsets.all(5),
+                decoration: const BoxDecoration(
+                  // borderRadius: BorderRadius.circular(10),
+                  shape: BoxShape.circle,
+                  color: Colors.black12,
+                ),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {},
+                ),
+              )
+            : const Icon(Icons.arrow_back),
+        title: isBar(shrinkOffset) ? null : const Text(MyApp.title),
+        centerTitle: false,
+        bottom: const TabBar(
+          tabs: [
+            Tab(
+              // icon: Icon(Icons.map),
+              // text: 'About',
+              child: Text(
+                'About',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+            Tab(
+              // icon: Icon(Icons.portrait),
+              text: 'Cast',
+            ),
+          ],
+        ),
+
+        // flexibleSpace: buildBackground(shrinkOffset),
       );
 
   Widget buildBackground(double shrinkOffset) => Opacity(
         opacity: disappear(shrinkOffset),
+        child: Image.network(
+          'https://source.unsplash.com/random?mono+dark',
+          fit: BoxFit.cover,
+        ),
+      );
+
+  Widget buildBackground01(double shrinkOffset) => Opacity(
+        opacity: isBack(shrinkOffset) ? 1 : disappear(shrinkOffset),
         child: Image.network(
           'https://source.unsplash.com/random?mono+dark',
           fit: BoxFit.cover,
@@ -113,9 +180,8 @@ class CustomSilverAppBarrDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => expandedHeight;
 
   @override
-  double get minExtent => kToolbarHeight + 30;
+  double get minExtent => kToolbarHeight + 60;
 
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      true;
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
 }
