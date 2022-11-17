@@ -5,130 +5,167 @@ void main() => runApp(const MyApp());
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  static const String _title = 'Flutter Code Sample';
+
   @override
   Widget build(BuildContext context) {
-    const title = 'GeeksforGeeks';
+    return const MaterialApp(
+      title: _title,
+      home: MyStatelessWidget(),
+    );
+  }
+}
 
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-            body: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              snap: false,
-              pinned: true,
-              floating: false,
-              flexibleSpace: FlexibleSpaceBar(
-                  // centerTitle: true,
-                  // // titlePadding: EdgeInsets.only(bottom: 0),
-                  // title: const Text(title,
-                  //     style: TextStyle(
-                  //       color: Colors.white,
-                  //       fontSize: 16.0,
-                  //     ) //TextStyle
-                  //     ), //Text
-                  background: Stack(
-                fit: StackFit.loose,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    child: Image.network(
-                      "https://i.ibb.co/QpWGK5j/Geeksfor-Geeks.png",
-                      fit: BoxFit.fitWidth,
-                    ),
+class MyStatelessWidget extends StatelessWidget {
+  const MyStatelessWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final List<String> tabs = <String>['Tab 1', 'Tab 2', 'Tab 3'];
+    return DefaultTabController(
+      length: tabs.length, // This is the number of tabs.
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            // These are the slivers that show up in the "outer" scroll view.
+            // Ovo su isječci koji se pojavljuju u "spoljnom" prikazu skrolovanja.
+            print(innerBoxIsScrolled);
+            return <Widget>[
+              SliverOverlapAbsorber(
+                // This widget takes the overlapping behavior of the SliverAppBar,
+                // and redirects it to the SliverOverlapInjector below. If it is
+                // missing, then it is possible for the nested "inner" scroll view
+                // below to end up under the SliverAppBar even when the inner
+                // scroll view thinks it has not been scrolled.
+                // This is not necessary if the "headerSliverBuilder" only builds
+                // widgets that do not overlap the next sliver.
+
+                // Ovaj widget preuzima ponašanje preklapanja SliverAppBar-a i
+                // preusmjerava ga na SliverOverlapInjector ispod. Ako nedostaje,
+                // onda je moguće da ugniježđeni "unutrašnji" prikaz za pomicanje
+                // ispod završi ispod SliverAppBar čak i kada pogled unutrašnjeg
+                // pomicanja misli da nije pomican. Ovo nije potrebno ako
+                // "headerSliverBuilder" gradi samo widgete koji se ne preklapaju
+                // sa sljedećim isječkom.
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                sliver: SliverAppBar(
+                  title:
+                      const Text('Books'), // This is the title in the app bar.
+                  pinned: true,
+                  expandedHeight: 250.0,
+                  // The "forceElevated" property causes the SliverAppBar to show
+                  // a shadow. The "innerBoxIsScrolled" parameter is true when the
+                  // inner scroll view is scrolled beyond its "zero" point, i.e.
+                  // when it appears to be scrolled below the SliverAppBar.
+                  // Without this, there are cases where the shadow would appear
+                  // or not appear inappropriately, because the SliverAppBar is
+                  // not actually aware of the precise position of the inner
+                  // scroll views.
+
+                  // Svojstvo "forceElevated" uzrokuje da SliverAppBar prikaže senku.
+                  // Parametar "innerBoxIsScrolled" je istinit kada se pogled unutrašnjeg
+                  // pomicanja pomiče iznad svoje "nulte" tačke, tj. kada se čini
+                  // da se pomiče ispod SliverAppBar-a. Bez toga, postoje slučajevi
+                  // u kojima bi se sjena pojavila ili ne bi se pojavila na neprikladan
+                  // način, jer SliverAppBar zapravo nije svjestan precizne pozicije
+                  // prikaza unutrašnjeg skrolovanja.
+                  forceElevated: innerBoxIsScrolled,
+                  bottom: TabBar(
+                    // These are the widgets to put in each tab in the tab bar.
+                    tabs: tabs.map((String name) => Tab(text: name)).toList(),
                   ),
-                  Positioned(
-                    top: 20,
-                    right: 20,
-                    child: Row(
-                      children: [
-                        Container(
-                          // margin: EdgeInsets.all(5),
-                          // decoration: BoxDecoration(
-                          //     border: Border.all(width: 2),
-                          //     color: Colors.green),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            border: Border.all(color: Colors.red),
+                ),
+              ),
+            ];
+          },
+          body: TabBarView(
+            // These are the contents of the tab views, below the tabs.
+            children: tabs.map((String name) {
+              return SafeArea(
+                top: false,
+                bottom: false,
+                child: Builder(
+                  // This Builder is needed to provide a BuildContext that is
+                  // "inside" the NestedScrollView, so that
+                  // sliverOverlapAbsorberHandleFor() can find the
+                  // NestedScrollView.
+
+                  // Ovaj Builder je potreban da obezbedi BuildContext koji je
+                  // "unutar" NestedScrollView, tako da sliverOverlapAbsorberHandleFor()
+                  // može pronaći NestedScrollView.
+                  builder: (BuildContext context) {
+                    return CustomScrollView(
+                      // The "controller" and "primary" members should be left
+                      // unset, so that the NestedScrollView can control this
+                      // inner scroll view.
+                      // If the "controller" property is set, then this scroll
+                      // view will not be associated with the NestedScrollView.
+                      // The PageStorageKey should be unique to this ScrollView;
+                      // it allows the list to remember its scroll position when
+                      // the tab view is not on the screen.
+
+                      // Članovi "controller" i "primary" trebaju biti nepostavljeni,
+                      // tako da NestedScrollView može kontrolirati ovaj unutrašnji
+                      // prikaz pomicanja. Ako je postavljeno svojstvo "controller",
+                      // onda ovaj prikaz pomicanja neće biti povezan sa NestedScrollView.
+                      // PageStorageKey bi trebao biti jedinstven za ovaj rollView;
+                      // omogućava listi da zapamti svoju poziciju pomeranja
+                      // kada prikaz kartice nije na ekranu.
+                      key: PageStorageKey<String>(name),
+                      slivers: <Widget>[
+                        SliverOverlapInjector(
+                          // This is the flip side of the SliverOverlapAbsorber
+                          // above.
+                          // Ovo je druga strana SliverOverlapAbsorbera iznad.
+                          handle:
+                              NestedScrollView.sliverOverlapAbsorberHandleFor(
+                                  context),
+                        ),
+                        SliverPadding(
+                          padding: const EdgeInsets.all(8.0),
+                          // In this example, the inner scroll view has
+                          // fixed-height list items, hence the use of
+                          // SliverFixedExtentList. However, one could use any
+                          // sliver widget here, e.g. SliverList or SliverGrid.
+                          // U ovom primjeru, pogled unutrašnjeg pomicanja ima
+                          // stavke liste fiksne visine, stoga se koristi
+                          // SliverFixedExtentList. Međutim, ovdje se može
+                          // koristiti bilo koji sliver widget,
+                          // npr. SliverList ili SliverGrid.
+                          sliver: SliverFixedExtentList(
+                            // The items in this example are fixed to 48 pixels
+                            // high. This matches the Material Design spec for
+                            // ListTile widgets.
+
+                            itemExtent: 48.0,
+                            delegate: SliverChildBuilderDelegate(
+                              (BuildContext context, int index) {
+                                // This builder is called for each child.
+                                // In this example, we just number each list item.
+                                // Ovaj graditelj je pozvan za svako dijete.
+                                // U ovom primjeru samo numeriramo svaku stavku liste.
+                                return ListTile(
+                                  title: Text('Item $index'),
+                                );
+                              },
+                              // The childCount of the SliverChildBuilderDelegate
+                              // specifies how many children this inner list
+                              // has. In this example, each tab has a list of
+                              // exactly 30 items, but this is arbitrary.
+                              childCount: 30,
+                            ),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          // color: Colors.redAccent,
-                          child: Text(1.10.toStringAsFixed(1)),
                         ),
                       ],
-                    ),
-                  ),
-                  Positioned(
-                    bottom: 20,
-                    left: 20,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: Colors.red),
-                        color: Colors.black26,
-                      ),
-                      // backgroundBlendMode: BlendMode.color),
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      // color: Colors.redAccent,
-                      child: Text(1.10.toStringAsFixed(1)),
-                    ),
-                  ),
-                ],
-              ) //Images.network
-                  ), //FlexibleSpaceBar
-              expandedHeight: 280,
-              backgroundColor: Colors.greenAccent[400],
-              leading: IconButton(
-                icon: const Icon(Icons.menu),
-                tooltip: 'Menu',
-                onPressed: () {},
-              ),
-              bottom: const TabBar(
-                // padding: EdgeInsets.only(bottom: 30),
-                tabs: <Widget>[
-                  Tab(icon: Icon(Icons.cloud_outlined)),
-                  Tab(icon: Icon(Icons.beach_access_sharp)),
-                  Tab(icon: Icon(Icons.brightness_5_sharp)),
-                ],
-              ),
-              actions: <Widget>[
-                IconButton(
-                  icon: const Icon(Icons.comment),
-                  tooltip: 'Comment Icon',
-                  onPressed: () {},
-                ), //IconButton
-                IconButton(
-                  icon: const Icon(Icons.settings),
-                  tooltip: 'Setting Icon',
-                  onPressed: () {},
-                ), //IconButton
-              ], //<Widget>[]
-            ), //SliverAppBar
-
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => ListTile(
-                  tileColor: (index % 2 == 0) ? Colors.white : Colors.green[50],
-                  title: Center(
-                    child: Text('$index',
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 50,
-                            color: Colors.greenAccent[400]) //TextStyle
-                        ), //Text
-                  ), //Center
-                ), //ListTile
-                childCount: 51,
-              ), //SliverChildBuildDelegate
-            ) //SliverList
-          ], //<Widget>[]
-        ) //CustonScrollView
-            ),
-      ), //Scaffold
-      debugShowCheckedModeBanner: false,
-      // Remove debug banner for proper
-      // view of setting icon
-    ); //MaterialApp
+                    );
+                  },
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
   }
 }
