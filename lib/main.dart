@@ -31,7 +31,7 @@ class MyStatelessWidget extends StatelessWidget {
               return <Widget>[
                 SliverAppBar(
                   title: const Text('Floating Nested SliverAppBar'),
-                  floating: true,
+                  floating: false,
                   //snap: false,
                   pinned: true,
                   expandedHeight: 200.0,
