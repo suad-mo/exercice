@@ -1,3 +1,4 @@
+import 'package:exercise/widgets/tab_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -41,15 +42,16 @@ class AdvancedSilverAppBar extends StatelessWidget {
           body: TabBarView(
             children: [
               ImagesView(context: context),
+              // TabWidget(name: 'Tab', context: context),
               ImagesView(context: context),
               ImagesView(context: context),
               // Center(child: Text('Tab 1')),
               // buildImages(),
+              // ImagesViewWitoutContext(),
               ImagesViewWitoutContext(),
-              ImagesViewWitoutContext(),
-              Center(child: Text('Tab 2')),
-              Center(child: Text('Tab 3')),
-              Center(child: Text('Tab 4')),
+              // Center(child: Text('Tab 2')),
+              // Center(child: Text('Tab 3')),
+              // Center(child: Text('Tab 4')),
               Center(child: Text('Tab 5')),
               Center(child: Text('Tab 6')),
               // buildImages(),
