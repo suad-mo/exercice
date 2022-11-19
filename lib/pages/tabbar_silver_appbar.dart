@@ -12,7 +12,7 @@ class TabBarSilverAppBar extends StatelessWidget {
           length: 2,
           child: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) {
-              print(innerBoxIsScrolled);
+              //print(innerBoxIsScrolled);
               return [
                 SliverAppBar(
                   title: innerBoxIsScrolled

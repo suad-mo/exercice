@@ -22,7 +22,11 @@ class MyApp extends StatelessWidget {
           appBarTheme: const AppBarTheme(
               backgroundColor: Colors.white, foregroundColor: Colors.black),
           tabBarTheme: const TabBarTheme(
-              labelColor: Colors.blue, unselectedLabelColor: Colors.black),
+            labelColor: Colors.blue,
+            unselectedLabelColor: Colors.black,
+            labelStyle: TextStyle(fontSize: 16),
+            unselectedLabelStyle: TextStyle(fontSize: 14),
+          ),
           // bottomNavigationBarTheme: BottomNavigationBarTheme()
         ),
         title: title,
