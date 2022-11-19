@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import '../main.dart';
@@ -11,11 +9,11 @@ class AdvancedSilverAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: DefaultTabController(
-          length: 2,
+          length: 6,
           child: CustomScrollView(
             slivers: [
               SliverPersistentHeader(
-                delegate: CustomSilverAppBarDelegate(expandedHeight: 250),
+                delegate: CustomSilverAppBarDelegate(expandedHeight: 400),
                 pinned: true,
                 floating: false,
               ),
@@ -55,13 +53,14 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
       fit: StackFit.expand,
       children: [
         if (isBack(shrinkOffset)) buildBackground01(shrinkOffset),
-        if (!isBack(shrinkOffset))
-          Container(
-            color: Colors.white10,
-            clipBehavior: Clip.none,
-          ),
-
         buildAppBar01(shrinkOffset),
+        // if (!isBar(shrinkOffset))
+        //   Container(
+        //     color: Colors.white10,
+        //     clipBehavior: Clip.none,
+        //   ),
+
+        // buildAppBar01(shrinkOffset),
         // Positioned(
         //   top: top,
         //   left: 20,
@@ -76,8 +75,8 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   double disappear(double shrinkOffset) => 1 - shrinkOffset / expandedHeight;
 
-  bool isBar(double shrinkOffset) => shrinkOffset <= expandedHeight - 160;
-  bool isBack(double shrinkOffset) => shrinkOffset <= expandedHeight - 180;
+  bool isBar(double shrinkOffset) => shrinkOffset <= expandedHeight - 180;
+  bool isBack(double shrinkOffset) => shrinkOffset <= expandedHeight - 200;
 
   Widget buildAppBar(double shrinkOffset) => Opacity(
         opacity: appear(shrinkOffset),
@@ -91,7 +90,7 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   Widget buildAppBar01(double shrinkOffset) => AppBar(
         backgroundColor:
-            isBar(shrinkOffset) ? Colors.transparent : Colors.white,
+            isBack(shrinkOffset) ? Colors.transparent : Colors.white,
         leading: isBar(shrinkOffset)
             ? Container(
                 // color: Colors.green,
@@ -99,7 +98,7 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
                 decoration: const BoxDecoration(
                   // borderRadius: BorderRadius.circular(10),
                   shape: BoxShape.circle,
-                  color: Colors.black12,
+                  color: Colors.black26,
                 ),
                 child: IconButton(
                   icon: const Icon(
@@ -113,19 +112,19 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
         title: isBar(shrinkOffset) ? null : const Text(MyApp.title),
         centerTitle: false,
         bottom: const TabBar(
+          indicatorWeight: 1,
+          indicatorColor: Colors.blue,
+          indicatorPadding: EdgeInsets.all(5),
+          indicatorSize: TabBarIndicatorSize.label,
+          automaticIndicatorColorAdjustment: false,
+          isScrollable: true,
           tabs: [
-            Tab(
-              // icon: Icon(Icons.map),
-              // text: 'About',
-              child: Text(
-                'About',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            Tab(
-              // icon: Icon(Icons.portrait),
-              text: 'Cast',
-            ),
+            Tab(text: 'About'),
+            Tab(text: 'Cast'),
+            Tab(text: 'Comments'),
+            Tab(text: 'Review'),
+            Tab(text: 'Recommendations'),
+            Tab(text: 'Similar'),
           ],
         ),
 
@@ -141,7 +140,7 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
       );
 
   Widget buildBackground01(double shrinkOffset) => Opacity(
-        opacity: isBack(shrinkOffset) ? 1 : disappear(shrinkOffset),
+        opacity: isBar(shrinkOffset) ? 1 : disappear(shrinkOffset),
         child: Image.network(
           'https://source.unsplash.com/random?mono+dark',
           fit: BoxFit.cover,
@@ -180,7 +179,7 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => expandedHeight;
 
   @override
-  double get minExtent => kToolbarHeight + 60;
+  double get minExtent => kToolbarHeight + 60 + 30;
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;

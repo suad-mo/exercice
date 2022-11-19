@@ -21,7 +21,8 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.white,
           appBarTheme: const AppBarTheme(
               backgroundColor: Colors.white, foregroundColor: Colors.black),
-          tabBarTheme: const TabBarTheme(labelColor: Colors.amber),
+          tabBarTheme: const TabBarTheme(
+              labelColor: Colors.blue, unselectedLabelColor: Colors.black),
           // bottomNavigationBarTheme: BottomNavigationBarTheme()
         ),
         title: title,
