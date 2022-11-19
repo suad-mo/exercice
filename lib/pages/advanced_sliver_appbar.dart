@@ -8,39 +8,56 @@ class AdvancedSilverAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: DefaultTabController(
-          length: 6,
-          child: CustomScrollView(
-            slivers: [
-              SliverPersistentHeader(
-                delegate: CustomSilverAppBarDelegate(expandedHeight: 400),
-                pinned: true,
-                floating: false,
-              ),
-              SliverPersistentHeader(
+          body: DefaultTabController(
+        length: 6,
+        child: NestedScrollView(
+          headerSliverBuilder: ((context, innerBoxIsScrolled) => <Widget>[
+                SliverPersistentHeader(
+                  delegate: CustomSilverAppBarDelegate(expandedHeight: 400),
                   pinned: true,
                   floating: false,
-                  delegate: _SliverAppBarDelegate(const TabBar(
-                    indicatorWeight: 1,
-                    indicatorColor: Colors.blue,
-                    // indicatorPadding: EdgeInsets.all(5),
-                    indicatorSize: TabBarIndicatorSize.label,
-                    // automaticIndicatorColorAdjustment: false,
-                    isScrollable: true,
-                    tabs: [
-                      Tab(text: 'About'),
-                      Tab(text: 'Cast'),
-                      Tab(text: 'Comments'),
-                      Tab(text: 'Review'),
-                      Tab(text: 'Recommendations'),
-                      Tab(text: 'Similar'),
-                    ],
-                  ))),
-              buildImages(),
+                ),
+                SliverPersistentHeader(
+                    pinned: true,
+                    floating: false,
+                    delegate: _SliverAppBarDelegate(const TabBar(
+                      indicatorWeight: 1,
+                      indicatorColor: Colors.blue,
+                      // indicatorPadding: EdgeInsets.all(5),
+                      indicatorSize: TabBarIndicatorSize.label,
+                      // automaticIndicatorColorAdjustment: false,
+                      isScrollable: true,
+                      tabs: [
+                        Tab(text: 'About'),
+                        Tab(text: 'Cast'),
+                        Tab(text: 'Comments'),
+                        Tab(text: 'Review'),
+                        Tab(text: 'Recommendations'),
+                        Tab(text: 'Similar'),
+                      ],
+                    ))),
+                // buildImages(),
+              ]),
+          body: TabBarView(
+            children: [
+              ImagesView(context: context),
+              ImagesView(context: context),
+              ImagesView(context: context),
+              // Center(child: Text('Tab 1')),
+              // buildImages(),
+              ImagesViewWitoutContext(),
+              ImagesViewWitoutContext(),
+              Center(child: Text('Tab 2')),
+              Center(child: Text('Tab 3')),
+              Center(child: Text('Tab 4')),
+              Center(child: Text('Tab 5')),
+              Center(child: Text('Tab 6')),
+              // buildImages(),
+              // buildImages(),
             ],
           ),
         ),
-      );
+      ));
 
   Widget buildImages() => SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -227,5 +244,38 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
     return false;
+  }
+}
+
+class ImagesView extends StatelessWidget {
+  const ImagesView({super.key, required this.context});
+  final BuildContext context;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        // childAspectRatio: 1.2,
+      ),
+      itemBuilder: ((context, index) => ImageWidget(index: index)),
+      itemCount: 20,
+    );
+  }
+}
+
+class ImagesViewWitoutContext extends StatelessWidget {
+  const ImagesViewWitoutContext({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        // childAspectRatio: 1.2,
+      ),
+      itemBuilder: ((context, index) => ImageWidget(index: index)),
+      itemCount: 20,
+    );
   }
 }
