@@ -17,6 +17,25 @@ class AdvancedSilverAppBar extends StatelessWidget {
                 pinned: true,
                 floating: false,
               ),
+              SliverPersistentHeader(
+                  pinned: true,
+                  floating: false,
+                  delegate: _SliverAppBarDelegate(const TabBar(
+                    indicatorWeight: 1,
+                    indicatorColor: Colors.blue,
+                    // indicatorPadding: EdgeInsets.all(5),
+                    indicatorSize: TabBarIndicatorSize.label,
+                    // automaticIndicatorColorAdjustment: false,
+                    isScrollable: true,
+                    tabs: [
+                      Tab(text: 'About'),
+                      Tab(text: 'Cast'),
+                      Tab(text: 'Comments'),
+                      Tab(text: 'Review'),
+                      Tab(text: 'Recommendations'),
+                      Tab(text: 'Similar'),
+                    ],
+                  ))),
               buildImages(),
             ],
           ),
@@ -89,6 +108,7 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
       );
 
   Widget buildAppBar01(double shrinkOffset) => AppBar(
+        elevation: 0,
         backgroundColor:
             isBack(shrinkOffset) ? Colors.transparent : Colors.white,
         leading: isBar(shrinkOffset)
@@ -111,22 +131,22 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
             : const Icon(Icons.arrow_back),
         title: isBar(shrinkOffset) ? null : const Text(MyApp.title),
         centerTitle: false,
-        bottom: const TabBar(
-          indicatorWeight: 1,
-          indicatorColor: Colors.blue,
-          indicatorPadding: EdgeInsets.all(5),
-          indicatorSize: TabBarIndicatorSize.label,
-          automaticIndicatorColorAdjustment: false,
-          isScrollable: true,
-          tabs: [
-            Tab(text: 'About'),
-            Tab(text: 'Cast'),
-            Tab(text: 'Comments'),
-            Tab(text: 'Review'),
-            Tab(text: 'Recommendations'),
-            Tab(text: 'Similar'),
-          ],
-        ),
+        // bottom: const TabBar(
+        //   indicatorWeight: 1,
+        //   indicatorColor: Colors.blue,
+        //   indicatorPadding: EdgeInsets.all(5),
+        //   indicatorSize: TabBarIndicatorSize.label,
+        //   automaticIndicatorColorAdjustment: false,
+        //   isScrollable: true,
+        //   tabs: [
+        //     Tab(text: 'About'),
+        //     Tab(text: 'Cast'),
+        //     Tab(text: 'Comments'),
+        //     Tab(text: 'Review'),
+        //     Tab(text: 'Recommendations'),
+        //     Tab(text: 'Similar'),
+        //   ],
+        // ),
 
         // flexibleSpace: buildBackground(shrinkOffset),
       );
@@ -179,8 +199,33 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => expandedHeight;
 
   @override
-  double get minExtent => kToolbarHeight + 60 + 30;
+  double get minExtent => kToolbarHeight + 60;
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate(this._tabBar);
+
+  final TabBar _tabBar;
+
+  @override
+  double get minExtent => _tabBar.preferredSize.height;
+  @override
+  double get maxExtent => _tabBar.preferredSize.height;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: Colors.white,
+      child: _tabBar,
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return false;
+  }
 }
