@@ -17,7 +17,9 @@ class AdvancedSilverAppBar extends StatelessWidget {
                   handle:
                       NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                   sliver: SliverPersistentHeader(
-                    delegate: CustomSilverAppBarDelegate(expandedHeight: 400),
+                    delegate: CustomSilverAppBarDelegate(
+                        expandedHeight:
+                            MediaQuery.of(context).size.height * 2 / 5),
                     pinned: true,
                     floating: false,
                   ),
@@ -180,10 +182,7 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
         ),
       );
 
-  Widget buildButton({
-    required String text,
-    required IconData icon,
-  }) =>
+  Widget buildButton({required String text, required IconData icon}) =>
       TextButton(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
