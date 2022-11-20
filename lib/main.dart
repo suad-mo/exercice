@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:card_swiper/card_swiper.dart';
@@ -35,12 +36,12 @@ class MyApp extends StatelessWidget {
         '/example04': (context) => const ExampleCustomPagination(),
         '/example05': (context) => const ExamplePhone(),
         '/example06': (context) => const ScaffoldWidget(
-              child: ExampleSwiperInScrollView(),
               title: 'ScrollView',
+              child: ExampleSwiperInScrollView(),
             ),
         '/example07': (context) => const ScaffoldWidget(
-              child: ExampleCustom(),
               title: 'Custom All',
+              child: ExampleCustom(),
             )
       },
     );
@@ -53,6 +54,7 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
+  // ignore: library_private_types_in_public_api
   _MyHomePageState createState() => _MyHomePageState();
 }
 
@@ -250,9 +252,6 @@ class ExampleCustomPagination extends StatelessWidget {
             ),
             Expanded(
               child: Swiper(
-                onTap: (index) {
-                  print('Print: $index');
-                },
                 itemBuilder: (context, index) {
                   return Image.asset(
                     images[index ~/ 3],
@@ -261,43 +260,37 @@ class ExampleCustomPagination extends StatelessWidget {
                 },
                 autoplay: false,
                 itemCount: images.length,
-                pagination: SwiperPagination(
-                    margin: EdgeInsets.zero,
-                    builder: SwiperCustomPagination(builder: (context, config) {
-                      final x = config.controller;
-                      return ConstrainedBox(
-                        constraints: const BoxConstraints.expand(height: 50.0),
-                        child: Row(
-                          children: <Widget>[
-                            // Text(
-                            //   '${titles[config.activeIndex]} ${config.activeIndex + 1}/${config.itemCount}',
-                            //   style: const TextStyle(fontSize: 20.0),
-                            // ),
-                            const SizedBox(
-                              width: 100,
-                            ),
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: InkWell(
-                                  onTap: () {
-                                    // x.addListener(() { })
-                                    x.move(3, animation: true);
-                                    print(x.index);
-                                  },
-                                  child: const DotSwiperPaginationBuilder(
-                                          color: Colors.black12,
-                                          activeColor: Colors.black,
-                                          size: 10.0,
-                                          activeSize: 20.0)
-                                      .build(context, config),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    })),
+                pagination: const SwiperPagination(
+                  alignment: Alignment.bottomLeft,
+                  margin: EdgeInsets.only(left: 180, bottom: 8),
+                  builder: MyHorizontalDotSwiperPaginationBuilder(),
+                ),
+                // SwiperPagination(
+                //   margin: EdgeInsets.zero,
+                //   builder: SwiperCustomPagination(builder: (context, config) {
+                //     return ConstrainedBox(
+                //       constraints: const BoxConstraints.expand(height: 50.0),
+                //       child: Row(
+                //         children: <Widget>[
+                //           // Text(
+                //           //   '${titles[config.activeIndex]} ${config.activeIndex + 1}/${config.itemCount}',
+                //           //   style: const TextStyle(fontSize: 20.0),
+                //           // ),
+                //           const SizedBox(
+                //             width: 100,
+                //           ),
+                //           Expanded(
+                //             child: Align(
+                //               alignment: Alignment.center,
+                //               child: const CustomDotSwiperPaginationBuilder()
+                //                   .build(context, config),
+                //             ),
+                //           )
+                //         ],
+                //       ),
+                //     );
+                //   }),
+                // ),
                 // control: const SwiperControl(color: Colors.redAccent),
               ),
             )
@@ -371,6 +364,171 @@ class ScaffoldWidget extends StatelessWidget {
         actions: actions,
       ),
       body: child,
+    );
+  }
+}
+
+/// Implements DotSwiperPaginationBuilder
+/// Added feature onTap() on dot and change picture
+class MyDotSwiperPaginationBuilder implements DotSwiperPaginationBuilder {
+  ///color when current index,if set null , will be Theme.of(context).primaryColor
+  final Color? _activeColor;
+
+  ///,if set null , will be Theme.of(context).scaffoldBackgroundColor
+  final Color? _color;
+
+  ///Size of the dot when activate
+  final double _activeSize;
+
+  ///Size of the dot
+  final double _size;
+
+  /// Space between dots
+  final double _space;
+
+  final Key? _key;
+
+  const MyDotSwiperPaginationBuilder({
+    double activeSize = 14,
+    double size = 10,
+    double space = 3,
+    Color? color,
+    Color? activeColor,
+    Key? key,
+  })  : _activeSize = activeSize,
+        _size = size,
+        _space = space,
+        _color = color,
+        _activeColor = activeColor,
+        _key = key;
+
+  @override
+  Color? get activeColor => _activeColor;
+
+  @override
+  Color? get color => _color;
+
+  @override
+  double get activeSize => _activeSize;
+
+  @override
+  Key? get key => _key;
+
+  @override
+  double get size => _size;
+
+  @override
+  double get space => _space;
+
+  @override
+  Widget build(BuildContext context, SwiperPluginConfig config) {
+    if (config.itemCount > 20) {
+      log(
+        'The itemCount is too big, we suggest use FractionPaginationBuilder '
+        'instead of DotSwiperPaginationBuilder in this situation',
+      );
+    }
+    var activeColor = this.activeColor;
+    var color = this.color;
+
+    if (activeColor == null || color == null) {
+      final themeData = Theme.of(context);
+      activeColor = this.activeColor ?? themeData.primaryColor;
+      color = this.color ?? themeData.scaffoldBackgroundColor;
+    }
+
+    final list = <Widget>[];
+    final itemCount = config.itemCount;
+    final activeIndex = config.activeIndex;
+
+    final controler = config.controller;
+
+    for (var i = 0; i < itemCount; i++) {
+      final active = i == activeIndex;
+      list.add(InkWell(
+        onTap: () {
+          controler.move(i, animation: true);
+        },
+        child: Container(
+          key: Key('pagination_$i'),
+          margin: EdgeInsets.all(space),
+          child: ClipOval(
+            child: Container(
+              color: active ? activeColor : color,
+              width: active ? activeSize : size,
+              height: active ? activeSize : size,
+            ),
+          ),
+        ),
+      ));
+    }
+    return Row(
+      key: key,
+      mainAxisSize: MainAxisSize.min,
+      children: list,
+    );
+  }
+}
+
+/// Extends DotSwiperPaginationBuilder
+/// Added feature onTap() on dot and change picture
+class MyHorizontalDotSwiperPaginationBuilder
+    extends DotSwiperPaginationBuilder {
+  const MyHorizontalDotSwiperPaginationBuilder({
+    super.activeSize,
+    super.size,
+    super.space,
+    super.color,
+    super.activeColor,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, SwiperPluginConfig config) {
+    if (config.itemCount > 20) {
+      log(
+        'The itemCount is too big, we suggest use FractionPaginationBuilder '
+        'instead of DotSwiperPaginationBuilder in this situation',
+      );
+    }
+    var activeColor = this.activeColor;
+    var color = this.color;
+
+    if (activeColor == null || color == null) {
+      final themeData = Theme.of(context);
+      activeColor = this.activeColor ?? themeData.primaryColor;
+      color = this.color ?? themeData.scaffoldBackgroundColor;
+    }
+
+    final list = <Widget>[];
+    final itemCount = config.itemCount;
+    final activeIndex = config.activeIndex;
+
+    final controler = config.controller;
+
+    for (var i = 0; i < itemCount; i++) {
+      final active = i == activeIndex;
+      list.add(InkWell(
+        onTap: () {
+          controler.move(i, animation: true);
+        },
+        child: Container(
+          key: Key('pagination_$i'),
+          margin: EdgeInsets.all(space),
+          child: ClipOval(
+            child: Container(
+              color: active ? activeColor : color,
+              width: active ? activeSize : size,
+              height: active ? activeSize : size,
+            ),
+          ),
+        ),
+      ));
+    }
+    return Row(
+      key: key,
+      mainAxisSize: MainAxisSize.min,
+      children: list,
     );
   }
 }
