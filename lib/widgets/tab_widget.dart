@@ -82,7 +82,7 @@ class TabWidget extends StatelessWidget {
                       // specifies how many children this inner list
                       // has. In this example, each tab has a list of
                       // exactly 30 items, but this is arbitrary.
-                      childCount: 30,
+                      childCount: 20,
                     ),
                   ),
                 ),

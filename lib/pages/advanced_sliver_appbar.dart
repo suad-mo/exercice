@@ -17,11 +17,10 @@ class AdvancedSilverAppBar extends StatelessWidget {
                   handle:
                       NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                   sliver: SliverPersistentHeader(
-                    delegate: CustomSilverAppBarDelegate(
-                        expandedHeight:
-                            MediaQuery.of(context).size.height * 2 / 5),
+                    delegate: CustomSilverAppBarDelegate(expandedHeight: 260),
+                    // MediaQuery.of(context).size.height * 2 / 5),
                     pinned: true,
-                    floating: false,
+                    floating: true,
                   ),
                 ),
 
@@ -86,8 +85,10 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     //const size = 60;
     //final top = expandedHeight - shrinkOffset - size / 2;
-    // print(
-    //     'shrinkOffset:$shrinkOffset, overlapsContent:$overlapsContent, expandedHeight:$expandedHeight');
+    print(
+        'shrinkOffset:$shrinkOffset, overlapsContent:$overlapsContent, expandedHeight:$expandedHeight');
+    print(
+        'shrinkOffset:$shrinkOffset, minExtend:$minExtent, expandedHeight:$expandedHeight');
     return Stack(
       clipBehavior: Clip.none,
       fit: StackFit.expand,
@@ -102,8 +103,8 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   double disappear(double shrinkOffset) => 1 - shrinkOffset / expandedHeight;
 
-  bool isBar(double shrinkOffset) => shrinkOffset <= expandedHeight - 180;
-  bool isBack(double shrinkOffset) => shrinkOffset <= expandedHeight - 200;
+  bool isBar(double shrinkOffset) => shrinkOffset <= expandedHeight - 150;
+  bool isBack(double shrinkOffset) => shrinkOffset <= expandedHeight - 170;
 
   Widget buildAppBar(double shrinkOffset) => Opacity(
         opacity: appear(shrinkOffset),
@@ -199,7 +200,7 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => expandedHeight;
 
   @override
-  double get minExtent => kToolbarHeight + 60;
+  double get minExtent => kToolbarHeight; // + 60;
 
   @override
   bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) => true;
@@ -218,9 +219,10 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
+    print(minExtent.toString());
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: _tabBar,
     );
   }
@@ -228,5 +230,34 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
     return false;
+  }
+}
+
+class MyCustomHeaderPage extends StatelessWidget {
+  const MyCustomHeaderPage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 38,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
+          children: [
+            // const SizedBox(width: 8),
+            Text('225 movies'),
+            Expanded(child: SizedBox()),
+
+            Text('Sort'),
+            IconButton(onPressed: (() {}), icon: Icon(Icons.sort)),
+            Text('View'),
+            IconButton(onPressed: (() {}), icon: Icon(Icons.menu_book)),
+            // const SizedBox(width: 8)
+          ],
+        ),
+      ),
+    );
   }
 }

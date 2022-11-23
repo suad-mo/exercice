@@ -1,4 +1,5 @@
 import 'package:exercise/pages/advanced_sliver_appbar.dart';
+import 'package:exercise/pages/my_advanced_sliver_appbar.dart';
 import 'package:flutter/material.dart';
 
 import 'pages/basic_silver_appbar.dart';
@@ -60,7 +61,7 @@ class _MainPageState extends State<MainPage> {
       items: const [
         BottomNavigationBarItem(
           icon: Text('SilverAppBar', style: style),
-          label: 'Basic',
+          label: 'MySliver',
         ),
         BottomNavigationBarItem(
           icon: Text('SliverAppBar', style: style),
@@ -78,7 +79,7 @@ class _MainPageState extends State<MainPage> {
   Widget buildPages() {
     switch (index) {
       case 0:
-        return const BasicSilverAppBar();
+        return const MyAdvancedSilverAppBar();
       case 1:
         return const AdvancedSilverAppBar();
       case 2:
