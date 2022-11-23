@@ -18,20 +18,24 @@ class MySliverAppBarDelegate extends SliverPersistentHeaderDelegate {
       clipBehavior: Clip.none,
       fit: StackFit.expand,
       children: [
-        backgound,
         MaAppBarWidget(
           expandedHeight: expandedHeight,
           shrinkOffset: shrinkOffset,
         ),
+        backgound,
       ],
     );
   }
+
+  double appear(double shrinkOffset) => shrinkOffset / expandedHeight;
+
+  double disappear(double shrinkOffset) => 1 - shrinkOffset / expandedHeight;
 
   @override
   double get maxExtent => expandedHeight;
 
   @override
-  double get minExtent => kToolbarHeight;
+  double get minExtent => kToolbarHeight + 60;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>

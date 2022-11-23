@@ -85,10 +85,10 @@ class CustomSilverAppBarDelegate extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     //const size = 60;
     //final top = expandedHeight - shrinkOffset - size / 2;
-    print(
-        'shrinkOffset:$shrinkOffset, overlapsContent:$overlapsContent, expandedHeight:$expandedHeight');
-    print(
-        'shrinkOffset:$shrinkOffset, minExtend:$minExtent, expandedHeight:$expandedHeight');
+    // print(
+    //     'shrinkOffset:$shrinkOffset, overlapsContent:$overlapsContent, expandedHeight:$expandedHeight');
+    // print(
+    //     'shrinkOffset:$shrinkOffset, minExtend:$minExtent, expandedHeight:$expandedHeight');
     return Stack(
       clipBehavior: Clip.none,
       fit: StackFit.expand,
@@ -219,7 +219,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    print(minExtent.toString());
+    // print(minExtent.toString());
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -247,13 +247,13 @@ class MyCustomHeaderPage extends StatelessWidget {
         child: Row(
           children: [
             // const SizedBox(width: 8),
-            Text('225 movies'),
-            Expanded(child: SizedBox()),
+            const Text('225 movies'),
+            const Expanded(child: SizedBox()),
 
-            Text('Sort'),
-            IconButton(onPressed: (() {}), icon: Icon(Icons.sort)),
-            Text('View'),
-            IconButton(onPressed: (() {}), icon: Icon(Icons.menu_book)),
+            const Text('Sort'),
+            IconButton(onPressed: (() {}), icon: const Icon(Icons.sort)),
+            const Text('View'),
+            IconButton(onPressed: (() {}), icon: const Icon(Icons.menu_book)),
             // const SizedBox(width: 8)
           ],
         ),

@@ -40,7 +40,7 @@ class MySliverAppBarWidget extends StatelessWidget {
       //   child: this,
       // ),
       // collapsedHeight: 120,
-      flexibleSpace: FlexibleSpaceBar(
+      flexibleSpace: const FlexibleSpaceBar(
         background: MyBackgraundWidget(),
         centerTitle: true,
         stretchModes: [

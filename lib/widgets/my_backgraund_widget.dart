@@ -15,12 +15,12 @@ class MyBackgraundWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 230,
+    return SizedBox(
+      height: 320,
       child: Column(
         children: [
           const SizedBox(
-            height: 80,
+            height: 10,
           ),
           CircleAvatar(
             backgroundImage: NetworkImage(profilePath),

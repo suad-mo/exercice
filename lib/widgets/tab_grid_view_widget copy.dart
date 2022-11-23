@@ -1,10 +1,7 @@
 // ignore_for_file: file_names
 
-import 'package:exercise/data.dart';
 import 'package:exercise/widgets/image_widget.dart';
 import 'package:flutter/material.dart';
-
-import 'my_image_widget.dart';
 
 class TabGridViewWidget extends StatelessWidget {
   final String name;

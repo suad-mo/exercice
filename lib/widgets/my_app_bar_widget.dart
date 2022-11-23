@@ -1,4 +1,3 @@
-import 'package:exercise/widgets/my_backgraund_widget.dart';
 import 'package:flutter/material.dart';
 
 import '../data.dart';
@@ -20,29 +19,33 @@ class MaAppBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      elevation: 0,
-      backgroundColor: isBack(shrinkOffset) ? Colors.transparent : Colors.white,
-      leading: isBar(shrinkOffset)
-          ? Container(
-              margin: const EdgeInsets.all(5),
-              decoration: const BoxDecoration(
-                // borderRadius: BorderRadius.circular(10),
-                shape: BoxShape.circle,
-                color: Colors.black26,
-              ),
-              child: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
+    return Opacity(
+      opacity: appear(shrinkOffset),
+      child: AppBar(
+        elevation: 0,
+        backgroundColor:
+            isBack(shrinkOffset) ? Colors.transparent : Colors.white,
+        leading: isBar(shrinkOffset)
+            ? Container(
+                margin: const EdgeInsets.all(5),
+                decoration: const BoxDecoration(
+                  // borderRadius: BorderRadius.circular(10),
+                  shape: BoxShape.circle,
+                  color: Colors.black26,
                 ),
-                onPressed: () {},
-              ),
-            )
-          : const Icon(Icons.arrow_back),
-      title: isBar(shrinkOffset) ? null : Text(name),
-      centerTitle: false,
-      // flexibleSpace: FlexibleSpaceBar(background: MyBackgraundWidget()),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {},
+                ),
+              )
+            : const Icon(Icons.arrow_back),
+        title: isBar(shrinkOffset) ? null : Text(name),
+        centerTitle: false,
+        // flexibleSpace: FlexibleSpaceBar(background: MyBackgraundWidget()),
+      ),
     );
   }
 }

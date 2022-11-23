@@ -1,5 +1,4 @@
 import 'package:exercise/widgets/my_sliver_app_bar_delegate.dart';
-import 'package:exercise/widgets/my_sliver_app_bar_widget.dart';
 import 'package:exercise/widgets/tab_grid_view_widget%20copy.dart';
 import 'package:exercise/widgets/tab_widget.dart';
 import 'package:flutter/material.dart';
@@ -16,19 +15,19 @@ class MyAdvancedSilverAppBar extends StatelessWidget {
         length: 6,
         child: NestedScrollView(
           headerSliverBuilder: ((context, innerBoxIsScrolled) => <Widget>[
-                // SliverOverlapAbsorber(
-                //   handle:
-                //       NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                //   sliver: SliverPersistentHeader(
-                //     delegate: MySliverAppBarDelegate(
-                //         expandedHeight: 260,
-                //         backgound: const MyBackgraundWidget()),
-                //     // MediaQuery.of(context).size.height * 2 / 5),
-                //     pinned: true,
-                //     floating: true,
-                //   ),
-                // ),
-                MySliverAppBarWidget(innerBoxIsScrolled: innerBoxIsScrolled),
+                SliverOverlapAbsorber(
+                  handle:
+                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                  sliver: SliverPersistentHeader(
+                    delegate: MySliverAppBarDelegate(
+                        expandedHeight: 250,
+                        backgound: const MyBackgraundWidget()),
+                    // MediaQuery.of(context).size.height * 2 / 5),
+                    pinned: true,
+                    floating: true,
+                  ),
+                ),
+                // MySliverAppBarWidget(innerBoxIsScrolled: innerBoxIsScrolled),
                 SliverPersistentHeader(
                   pinned: true,
                   floating: false,
@@ -37,6 +36,7 @@ class MyAdvancedSilverAppBar extends StatelessWidget {
                       // labelStyle: TextStyle(),
                       indicatorWeight: 1,
                       indicatorColor: Colors.blue,
+
                       // indicatorPadding: EdgeInsets.all(5),
                       indicatorSize: TabBarIndicatorSize.label,
                       // automaticIndicatorColorAdjustment: false,
@@ -224,7 +224,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    print(minExtent.toString());
+    //print(minExtent.toString());
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -252,13 +252,13 @@ class MyCustomHeaderPage extends StatelessWidget {
         child: Row(
           children: [
             // const SizedBox(width: 8),
-            Text('225 movies'),
-            Expanded(child: SizedBox()),
+            const Text('225 movies'),
+            const Expanded(child: SizedBox()),
 
-            Text('Sort'),
-            IconButton(onPressed: (() {}), icon: Icon(Icons.sort)),
-            Text('View'),
-            IconButton(onPressed: (() {}), icon: Icon(Icons.menu_book)),
+            const Text('Sort'),
+            IconButton(onPressed: (() {}), icon: const Icon(Icons.sort)),
+            const Text('View'),
+            IconButton(onPressed: (() {}), icon: const Icon(Icons.menu_book)),
             // const SizedBox(width: 8)
           ],
         ),
