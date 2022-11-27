@@ -35,7 +35,7 @@ class MyAdvancedSilverAppBar extends StatelessWidget {
                     delegate: _SliverAppBarDelegate(
                       const TabBar(
                         // labelStyle: TextStyle(),
-                        indicatorWeight: 1,
+                        indicatorWeight: 2,
                         indicatorColor: Colors.blue,
 
                         // indicatorPadding: EdgeInsets.all(5),

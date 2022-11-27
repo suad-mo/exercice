@@ -21,7 +21,7 @@ On March 29, 2008, The Rock inducted his father and his grandfather into the WWE
  \n\nIn recognition of his service to the Samoan people, and because he is a descendant of Samoan chiefs, 
  Johnson had the noble title of Seiuli bestowed upon him by Malietoa Tanumafili II during his visit 
  there in July 2004. He received a partial Samoan pe'a tattoo on his left side in 2003,and, in 2017, 
- had the small \"Brahma bull\" tattoo on his right arm covered with a larger half-sleeve tattoo 
+ had the small "Brahma bull" tattoo on his right arm covered with a larger half-sleeve tattoo 
  of a bull's skull.\n\nJohnson married Dany Garcia on May 3, 1997. Their only child together, 
  a daughter named Simone, was born in August 2001. On June 1, 2007, they announced they were 
  splitting up amicably. Johnson then began dating Lauren Hashian, daughter of Boston drummer Sib Hashian. 
