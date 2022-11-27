@@ -26,12 +26,13 @@ class MyTabGridViewWidget extends StatelessWidget {
           return CustomScrollView(
             key: PageStorageKey<String>(name),
             slivers: <Widget>[
-              // SliverOverlapInjector(
-              //   handle:
-              //       NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              // ),
+              SliverOverlapInjector(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              ),
               SliverPadding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                   sliver: SliverGrid(
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(

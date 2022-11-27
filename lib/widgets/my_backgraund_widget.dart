@@ -20,11 +20,11 @@ class MyBackgraundWidget extends StatelessWidget {
       child: Column(
         children: [
           const SizedBox(
-            height: 10,
+            height: 50,
           ),
           CircleAvatar(
             backgroundImage: NetworkImage(profilePath),
-            radius: 60,
+            radius: 80,
           ),
           const SizedBox(height: 10),
           Text(

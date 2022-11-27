@@ -1,6 +1,7 @@
 import 'package:exercise/widgets/my_sliver_app_bar_delegate.dart';
 import 'package:exercise/widgets/tab_grid_view_widget%20copy.dart';
 import 'package:exercise/widgets/tab_widget.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/my_backgraund_widget.dart';
@@ -11,61 +12,63 @@ class MyAdvancedSilverAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-          body: DefaultTabController(
-        length: 6,
-        child: NestedScrollView(
-          headerSliverBuilder: ((context, innerBoxIsScrolled) => <Widget>[
-                SliverOverlapAbsorber(
-                  handle:
-                      NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-                  sliver: SliverPersistentHeader(
-                    delegate: MySliverAppBarDelegate(
-                        expandedHeight: 250,
-                        backgound: const MyBackgraundWidget()),
-                    // MediaQuery.of(context).size.height * 2 / 5),
-                    pinned: true,
-                    floating: true,
-                  ),
-                ),
-                // MySliverAppBarWidget(innerBoxIsScrolled: innerBoxIsScrolled),
-                SliverPersistentHeader(
-                  pinned: true,
-                  floating: false,
-                  delegate: _SliverAppBarDelegate(
-                    const TabBar(
-                      // labelStyle: TextStyle(),
-                      indicatorWeight: 1,
-                      indicatorColor: Colors.blue,
-
-                      // indicatorPadding: EdgeInsets.all(5),
-                      indicatorSize: TabBarIndicatorSize.label,
-                      // automaticIndicatorColorAdjustment: false,
-                      isScrollable: true,
-                      tabs: [
-                        Tab(text: 'About'),
-                        Tab(text: 'Cast'),
-                        Tab(text: 'Comments'),
-                        Tab(text: 'Review'),
-                        Tab(text: 'Recommendations'),
-                        Tab(text: 'Similar'),
-                      ],
+        body: DefaultTabController(
+          length: 6,
+          child: NestedScrollView(
+            headerSliverBuilder: ((context, innerBoxIsScrolled) => <Widget>[
+                  SliverOverlapAbsorber(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                        context),
+                    sliver: SliverPersistentHeader(
+                      delegate: MySliverAppBarDelegate(
+                          expandedHeight: 350,
+                          backgound: const MyBackgraundWidget()),
+                      // MediaQuery.of(context).size.height * 2 / 5),
+                      pinned: true,
+                      floating: false,
                     ),
                   ),
-                ),
-                // buildImages(),
-              ]),
-          body: TabBarView(
-            children: [
-              TabGridViewWidget(name: 'name1', context: context),
-              MyTabGridViewWidget(name: 'name', context: context),
-              TabGridViewWidget(name: 'name2', context: context),
-              TabGridViewWidget(name: 'name3', context: context),
-              TabWidget(name: 'Tab1', context: context),
-              TabWidget(name: 'Tab', context: context),
-            ],
+                  // MySliverAppBarWidget(innerBoxIsScrolled: innerBoxIsScrolled),
+                  SliverPersistentHeader(
+                    pinned: true,
+                    floating: false,
+                    delegate: _SliverAppBarDelegate(
+                      const TabBar(
+                        // labelStyle: TextStyle(),
+                        indicatorWeight: 1,
+                        indicatorColor: Colors.blue,
+
+                        // indicatorPadding: EdgeInsets.all(5),
+                        indicatorSize: TabBarIndicatorSize.label,
+                        // automaticIndicatorColorAdjustment: false,
+                        isScrollable: true,
+                        dragStartBehavior: DragStartBehavior.down,
+                        tabs: [
+                          Tab(text: 'About'),
+                          Tab(text: 'Cast'),
+                          Tab(text: 'Comments'),
+                          Tab(text: 'Review'),
+                          Tab(text: 'Recommendations'),
+                          Tab(text: 'Similar'),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // buildImages(),
+                ]),
+            body: TabBarView(
+              children: [
+                TabGridViewWidget(name: 'name1', context: context),
+                MyTabGridViewWidget(name: 'name', context: context),
+                TabGridViewWidget(name: 'name2', context: context),
+                TabGridViewWidget(name: 'name3', context: context),
+                TabWidget(name: 'Tab1', context: context),
+                TabWidget(name: 'Tab', context: context),
+              ],
+            ),
           ),
         ),
-      ));
+      );
 
   // Widget buildImages() => SliverGrid(
   //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

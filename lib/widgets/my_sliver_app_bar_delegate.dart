@@ -22,7 +22,14 @@ class MySliverAppBarDelegate extends SliverPersistentHeaderDelegate {
           expandedHeight: expandedHeight,
           shrinkOffset: shrinkOffset,
         ),
-        backgound,
+        Positioned(
+          bottom: 0,
+          child: Container(
+            width: MediaQuery.of(context).size.width,
+            alignment: Alignment.center,
+            child: shrinkOffset / expandedHeight < 0.5 ? backgound : null,
+          ),
+        ),
       ],
     );
   }
@@ -35,7 +42,7 @@ class MySliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => expandedHeight;
 
   @override
-  double get minExtent => kToolbarHeight + 60;
+  double get minExtent => kToolbarHeight * 2;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>

@@ -19,33 +19,29 @@ class MaAppBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: appear(shrinkOffset),
-      child: AppBar(
-        elevation: 0,
-        backgroundColor:
-            isBack(shrinkOffset) ? Colors.transparent : Colors.white,
-        leading: isBar(shrinkOffset)
-            ? Container(
-                margin: const EdgeInsets.all(5),
-                decoration: const BoxDecoration(
-                  // borderRadius: BorderRadius.circular(10),
-                  shape: BoxShape.circle,
-                  color: Colors.black26,
+    return AppBar(
+      elevation: 0,
+      backgroundColor: isBack(shrinkOffset) ? Colors.transparent : Colors.white,
+      leading: shrinkOffset / expandedHeight < 0.5 // isBar(shrinkOffset)
+          ? Container(
+              margin: const EdgeInsets.all(5),
+              decoration: const BoxDecoration(
+                // borderRadius: BorderRadius.circular(10),
+                shape: BoxShape.circle,
+                color: Colors.black26,
+              ),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
                 ),
-                child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {},
-                ),
-              )
-            : const Icon(Icons.arrow_back),
-        title: isBar(shrinkOffset) ? null : Text(name),
-        centerTitle: false,
-        // flexibleSpace: FlexibleSpaceBar(background: MyBackgraundWidget()),
-      ),
+                onPressed: () {},
+              ),
+            )
+          : const Icon(Icons.arrow_back),
+      title: shrinkOffset / expandedHeight < 0.5 ? null : Text(name),
+      centerTitle: false,
+      // flexibleSpace: FlexibleSpaceBar(background: MyBackgraundWidget()),
     );
   }
 }

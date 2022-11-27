@@ -23,10 +23,10 @@ class TabGridViewWidget extends StatelessWidget {
           return CustomScrollView(
             key: PageStorageKey<String>(name),
             slivers: <Widget>[
-              // SliverOverlapInjector(
-              //   handle:
-              //       NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              // ),
+              SliverOverlapInjector(
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              ),
               SliverPadding(
                   padding: const EdgeInsets.all(8.0),
                   // In this example, the inner scroll view has
@@ -44,7 +44,8 @@ class TabGridViewWidget extends StatelessWidget {
                             crossAxisCount: 2),
                     delegate: SliverChildBuilderDelegate(
                         (context, index) => ImageWidget(index: index),
-                        childCount: 20),
+                        childCount: 20,
+                        addRepaintBoundaries: false),
                   )),
             ],
           );
